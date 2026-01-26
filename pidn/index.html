@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>هدية للطلبة - لعبة العطلة</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+
+        :root {
+            --primary: #ff6b6b;
+            --secondary: #4ecdc4;
+            --accent: #ffe66d;
+            --dark: #1a1a2e;
+            --light: #f7fff7;
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: radial-gradient(circle at center, #2e2e4e, #1a1a2e);
+            color: var(--light);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Background Effects */
+        .bg-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 10s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* UI Containers */
+        #game-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 80vh; /* Scaled for mobile friendliness */
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        /* Screens */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            transition: opacity 0.5s ease;
+            z-index: 20;
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(255, 230, 109, 0.5);
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .highlight {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.4rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            font-family: 'Cairo', sans-serif;
+            font-weight: bold;
+            color: var(--white);
+            background: linear-gradient(45deg, var(--primary), #ff8e8e);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: bounce 2s infinite;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Game Elements */
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            cursor: none; /* Hide cursor during game */
+        }
+
+        .hud {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.8);
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
+        /* Confetti */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            animation: confetti-fall linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Background Particles -->
+    <div class="bg-particles" id="particles"></div>
+
+    <div id="game-container">
+        
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen">
+            <h1>🎉 مفاجأة عطلة سعيدة! 🎉</h1>
+            <p>هذه اللعبة هدية خاصة لجميع الطلبة الذين لديهم <br><span class="highlight">عطلة</span> 💖</p>
+            <p>نتمنى لك عطلة مليئة بالفرح والمرح!</p>
+            <button class="btn" onclick="startGame()">ابدأ اللعب</button>
+        </div>
+
+        <!-- Game Interface -->
+        <div id="game-ui" class="hidden">
+            <div class="hud">
+                <span>النتيجة: <span id="score">0</span></span>
+                <span>أعلى نتيجة: <span id="high-score">0</span></span>
+            </div>
+            <canvas id="gameCanvas"></canvas>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="game-over-screen" class="screen hidden">
+            <h1>انتهت اللعبة!</h1>
+            <p>حظاً أوفر في المرة القادمة !</p>
+            <div style="margin-bottom: 20px;">
+                <p>نقاطك: <span id="final-score" class="highlight">0</span></p>
+                <p>أعلى نقاط: <span id="final-high-score" class="highlight">0</span></p>
+            </div>
+            <button class="btn" onclick="restartGame()">إعادة المحاولة 🔄</button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Setup & Config ---
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const particlesContainer = document.getElementById('particles');
+
+        // Audio Effects (Synthesized for simplicity - optional but adds polish)
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            if (type === 'hit') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.1);
+            } else if (type === 'lose') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.5);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.5);
+            }
+        }
+
+        // --- Particle System for Background ---
+        function createParticles() {
+            for (let i = 0; i < 50; i++) {
+                const p = document.createElement('div');
+                p.classList.add('particle');
+                p.style.left = Math.random() * 100 + '%';
+                p.style.width = Math.random() * 10 + 2 + 'px';
+                p.style.height = p.style.width;
+                p.style.animationDuration = Math.random() * 10 + 5 + 's';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                particlesContainer.appendChild(p);
+            }
+        }
+        createParticles();
+
+        // --- Game Variables ---
+        let gameRunning = false;
+        let score = 0;
+        let highScore = localStorage.getItem('doniaHighScore') || 0;
+        let animationId;
+
+        document.getElementById('high-score').innerText = highScore;
+
+        // Scaled sizes
+        let canvasWidth, canvasHeight;
+        
+        const paddle = {
+            width: 100,
+            height: 15,
+            x: 0,
+            y: 0,
+            color: '#000000', // Black as requested
+            speed: 0 // For touch physics if needed
+        };
+
+        const ball = {
+            x: 0,
+            y: 0,
+            radius: 10,
+            color: '#ff6b6b',
+            dx: 4,
+            dy: -4,
+            speed: 6
+        };
+
+        // --- Resizing ---
+        function resize() {
+            const container = document.getElementById('game-container');
+            canvasWidth = container.clientWidth;
+            canvasHeight = container.clientHeight;
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+
+            // Reset paddle position relative to new size
+            paddle.y = canvasHeight - 30; // 30px from bottom
+            paddle.x = (canvasWidth - paddle.width) / 2;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // --- Input Handling ---
+        // Mouse
+        canvas.addEventListener('mousemove', (e) => {
+            if (!gameRunning) return;
+            const rect = canvas.getBoundingClientRect();
+            const root = document.documentElement;
+            let mouseX = e.clientX - rect.left;
+            
+            paddle.x = mouseX - paddle.width / 2;
+            
+            // Constrain
+            if (paddle.x < 0) paddle.x = 0;
+            if (paddle.x + paddle.width > canvasWidth) paddle.x = canvasWidth - paddle.width;
+        });
+
+        // Touch
+        canvas.addEventListener('touchmove', (e) => {
+            if (!gameRunning) return;
+            e.preventDefault(); // Prevent scrolling
+            const rect = canvas.getBoundingClientRect();
+            let touchX = e.touches[0].clientX - rect.left;
+            
+            paddle.x = touchX - paddle.width / 2;
+
+            if (paddle.x < 0) paddle.x = 0;
+            if (paddle.x + paddle.width > canvasWidth) paddle.x = canvasWidth - paddle.width;
+        }, { passive: false });
+
+
+        // --- Game Logic ---
+        function initGame() {
+            score = 0;
+            document.getElementById('score').innerText = score;
+            
+            // Reset Ball
+            ball.x = canvasWidth / 2;
+            ball.y = canvasHeight / 3;
+            ball.dx = (Math.random() < 0.5 ? -1 : 1) * ball.speed * 0.7; // Random horizontal start
+            ball.dy = -ball.speed; // Starts moving up
+
+            // Reset Paddle
+            paddle.x = (canvasWidth - paddle.width) / 2;
+        }
+
+        function update() {
+            if (!gameRunning) return;
+
+            // Move Ball
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+
+            // Wall Collisions
+            if (ball.x + ball.radius > canvasWidth || ball.x - ball.radius < 0) {
+                ball.dx *= -1;
+                playSound('hit');
+            }
+            if (ball.y - ball.radius < 0) {
+                ball.dy *= -1;
+                playSound('hit');
+            }
+
+            // Paddle Collision
+            // Check vertical bounds (ball bottom aligned with paddle top)
+            if (ball.y + ball.radius > paddle.y && 
+                ball.y - ball.radius < paddle.y + paddle.height &&
+                ball.x > paddle.x && 
+                ball.x < paddle.x + paddle.width) {
+                
+                // Only bounce if coming from above
+                if (ball.dy > 0) {
+                    ball.dy = -ball.speed; // Bounce up
+                    
+                    // Add some "english" based on where it hit the paddle
+                    let hitPoint = ball.x - (paddle.x + paddle.width / 2);
+                    // Normalize hit point (-1 to 1)
+                    hitPoint = hitPoint / (paddle.width / 2);
+                    
+                    ball.dx = hitPoint * (ball.speed * 0.8); // Angle change
+                    
+                    score++;
+                    document.getElementById('score').innerText = score;
+                    if (score % 5 === 0) {
+                         ball.speed += 0.5; // Difficulty increase
+                         // Keep dy consistent with new speed
+                         ball.dy = -ball.speed; 
+                         // Create mini confetti burst
+                         createConfettiBurst(paddle.x + paddle.width/2, paddle.y);
+                    }
+                    playSound('hit');
+                }
+            }
+
+            // Game Over Condition
+            if (ball.y - ball.radius > canvasHeight) {
+                gameOver();
+            }
+
+            draw();
+            animationId = requestAnimationFrame(update);
+        }
+
+        function draw() {
+            // Clear
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+            // Draw Paddle (Black as requested)
+            ctx.fillStyle = paddle.color;
+            ctx.beginPath();
+            ctx.roundRect(paddle.x, paddle.y, paddle.width, paddle.height, 10);
+            ctx.fill();
+
+            // Glow for Paddle
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "rgba(0,0,0,0.5)";
+
+            // Draw Ball
+            ctx.fillStyle = ball.color;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = ball.color;
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Reset Shadow
+            ctx.shadowBlur = 0;
+        }
+
+        // --- Game Management ---
+        function startGame() {
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('game-over-screen').classList.add('hidden');
+            
+            document.getElementById('game-ui').classList.remove('hidden');
+            document.getElementById('game-ui').style.opacity = '1';
+            document.getElementById('game-ui').style.zIndex = '1';
+
+            resize(); // Ensure size is correct
+            initGame();
+            gameRunning = true;
+            update();
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            playSound('lose');
+            cancelAnimationFrame(animationId);
+
+            // Update High Score
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('doniaHighScore', highScore);
+            }
+
+            // Update UI
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('final-high-score').innerText = highScore;
+            document.getElementById('high-score').innerText = highScore;
+
+            // Show Game Over Screen
+            setTimeout(() => {
+                document.getElementById('game-ui').classList.add('hidden');
+                const goScreen = document.getElementById('game-over-screen');
+                goScreen.classList.remove('hidden');
+            }, 500);
+        }
+
+        function restartGame() {
+            startGame();
+        }
+
+        // --- Visual Effects ---
+        function createConfettiBurst(x, y) {
+            for(let i=0; i<10; i++) {
+                const c = document.createElement('div');
+                c.classList.add('confetti');
+                c.style.left = (canvas.getBoundingClientRect().left + x) + 'px';
+                c.style.top = (canvas.getBoundingClientRect().top + y) + 'px';
+                c.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                c.style.animationDuration = (0.5 + Math.random()) + 's';
+                
+                // Random outward burst overrides standard fall for a moment (using custom physics would be better but CSS is simple)
+                // Actually, CSS is tricky for bursts. Let's just spawn visual indicators on canvas? 
+                // Simple CSS fix:
+                document.body.appendChild(c);
+                setTimeout(() => c.remove(), 1000);
+            }
+        }
+
+    </script>
+</body>
+</html>pi
