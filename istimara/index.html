@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>استمارة انضمام ولائحة أستوديو أرتياتك</title>
+    <title>استمارة انضمام ولائحة أستوديو أرتياتك الكاملة</title>
     <!-- Include html2pdf.js for client-side PDF generation in browser -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
@@ -13,7 +13,7 @@
             --accent-hover: #991b1b;
             --bg-body: #f4f1ea;
             --card-bg: #ffffff;
-            --border: #d1d5db;
+            --border: #cbd5e1;
             --text-main: #1f2937;
             --text-muted: #4b5563;
             --gold: #b45309;
@@ -29,7 +29,7 @@
         body {
             background-color: var(--bg-body);
             color: var(--text-main);
-            line-height: 1.7;
+            line-height: 1.8;
             padding: 20px;
         }
 
@@ -50,14 +50,13 @@
         }
 
         header h1 {
-            font-size: 28pt;
+            font-size: 26pt;
             font-weight: bold;
             margin-bottom: 5px;
-            letter-spacing: 1px;
         }
 
         header p.subtitle {
-            font-size: 14pt;
+            font-size: 13pt;
             color: #e2e8f0;
             font-style: italic;
         }
@@ -87,7 +86,7 @@
             text-align: center;
             background: none;
             border: none;
-            font-size: 14pt;
+            font-size: 13pt;
             font-weight: bold;
             color: var(--text-muted);
             cursor: pointer;
@@ -117,7 +116,7 @@
             display: block;
         }
 
-        /* Classic Typography & Elements */
+        /* Typography & Titles */
         h2.section-title {
             font-size: 18pt;
             color: var(--primary);
@@ -151,15 +150,30 @@
             margin-bottom: 20px;
         }
 
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
         label {
             font-size: 12pt;
             font-weight: bold;
             margin-bottom: 8px;
             color: var(--primary);
+        }
+
+        .label-with-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .learn-more-link {
+            font-size: 10.5pt;
+            color: var(--accent);
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+
+        .learn-more-link:hover {
+            color: var(--accent-hover);
         }
 
         input[type="text"],
@@ -184,7 +198,7 @@
             background-color: #ffffff;
         }
 
-        .radio-group, .checkbox-group {
+        .radio-group {
             display: flex;
             gap: 20px;
             flex-wrap: wrap;
@@ -206,28 +220,43 @@
         }
 
         .article {
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px dashed var(--border);
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #f8fafc;
+            border-right: 4px solid var(--primary);
+            border-radius: 4px;
+            transition: all 0.5s ease;
+        }
+
+        .article.highlight {
+            background-color: #fef2f2;
+            border-right-color: var(--accent);
+            box-shadow: 0 0 10px rgba(185, 28, 28, 0.15);
         }
 
         .article-title {
             font-weight: bold;
-            font-size: 13pt;
+            font-size: 13.5pt;
             color: var(--accent);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 5px;
         }
 
-        .article p, .article ul {
-            margin-bottom: 8px;
+        .article p, .article ul, .article ol {
+            margin-bottom: 10px;
             color: var(--text-main);
         }
 
-        .article ul {
-            padding-right: 20px;
+        .article ul, .article ol {
+            padding-right: 25px;
         }
 
-        /* Submit & PDF Section */
+        .article li {
+            margin-bottom: 5px;
+        }
+
+        /* Submit & Declaration */
         .declaration-box {
             background-color: #f8fafc;
             border: 1px solid #cbd5e1;
@@ -257,12 +286,7 @@
             background-color: var(--accent-hover);
         }
 
-        /* Hidden Printable Template */
-        #pdf-template {
-            display: none;
-        }
-
-        /* PDF Specific Layout Rules for Print Generation */
+        /* PDF Printable Template */
         .pdf-page {
             width: 210mm;
             min-height: 297mm;
@@ -272,7 +296,6 @@
             font-size: 10pt;
             line-height: 1.6;
             box-sizing: border-box;
-            position: relative;
         }
 
         .pdf-header {
@@ -284,87 +307,18 @@
             align-items: center;
         }
 
-        .pdf-header-title {
-            text-align: right;
-        }
-
-        .pdf-header-title h1 {
-            font-size: 18pt;
-            color: #1e293b;
-            margin: 0;
-        }
-
-        .pdf-header-title p {
-            font-size: 10pt;
-            color: #64748b;
-            margin: 0;
-        }
-
-        .pdf-field {
-            margin-bottom: 12px;
-        }
-
-        .pdf-field-label {
-            font-weight: bold;
-            color: #1e293b;
-            font-size: 10.5pt;
-        }
-
-        .pdf-field-value {
-            border-bottom: 1px dotted #94a3b8;
-            padding-bottom: 2px;
-            color: #0f172a;
-        }
-
-        .pdf-grid-2 {
-            display: table;
-            width: 100%;
-            table-layout: fixed;
-            margin-bottom: 10px;
-        }
-
-        .pdf-col {
-            display: table-cell;
-            width: 50%;
-            padding-left: 10px;
-        }
-
-        .pdf-box {
-            border: 1px solid #e2e8f0;
-            background-color: #f8fafc;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 12px;
-        }
-
-        .pdf-footer {
-            margin-top: 30px;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 15px;
-            font-size: 9pt;
-            color: #64748b;
-            text-align: center;
-        }
-
-        .signature-section {
-            margin-top: 40px;
-            display: table;
-            width: 100%;
-        }
-
-        .sig-col {
-            display: table-cell;
-            width: 50%;
-            text-align: center;
-        }
-
-        .sig-line {
-            margin-top: 40px;
-            border-top: 1px dashed #475569;
-            width: 80%;
-            margin-left: auto;
-            margin-right: auto;
-        }
+        .pdf-header-title h1 { font-size: 18pt; color: #1e293b; margin: 0; }
+        .pdf-header-title p { font-size: 10pt; color: #64748b; margin: 0; }
+        .pdf-field { margin-bottom: 12px; }
+        .pdf-field-label { font-weight: bold; color: #1e293b; font-size: 10.5pt; }
+        .pdf-field-value { border-bottom: 1px dotted #94a3b8; padding-bottom: 2px; color: #0f172a; }
+        .pdf-grid-2 { display: table; width: 100%; table-layout: fixed; margin-bottom: 10px; }
+        .pdf-col { display: table-cell; width: 50%; padding-left: 10px; }
+        .pdf-box { border: 1px solid #e2e8f0; background-color: #f8fafc; padding: 10px; border-radius: 4px; margin-bottom: 12px; }
+        .pdf-footer { margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 15px; font-size: 9pt; color: #64748b; text-align: center; }
+        .signature-section { margin-top: 40px; display: table; width: 100%; }
+        .sig-col { display: table-cell; width: 50%; text-align: center; }
+        .sig-line { margin-top: 40px; border-top: 1px dashed #475569; width: 80%; margin-left: auto; margin-right: auto; }
     </style>
 </head>
 <body>
@@ -372,7 +326,7 @@
 <div class="container">
     <header>
         <h1>أستوديو أرتياتك للأعمال الفنية والتقنية</h1>
-        <p class="subtitle">Artiatech Studio - نموذج الانضمام واللائحة التنفيذية</p>
+        <p class="subtitle">Artiatech Studio - استمارة الانضمام واللائحة التنفيذية والداخلية</p>
         <div class="contact-bar">
             <span>📧 artiateech@gmail.com</span>
             <span>📞 +218 92 281 3618</span>
@@ -382,8 +336,8 @@
     </header>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('form-tab')">استمارة الانضمام</button>
-        <button class="tab-btn" onclick="switchTab('bylaws-tab')">اللائحة الداخلية ووثيقة التشغيل</button>
+        <button id="tab-btn-form" class="tab-btn active" onclick="switchTab('form-tab')">استمارة الانضمام</button>
+        <button id="tab-btn-bylaws" class="tab-btn" onclick="switchTab('bylaws-tab')">اللائحة الداخلية ووثيقة التشغيل (الكاملة)</button>
     </div>
 
     <div class="content-card">
@@ -418,7 +372,10 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="membershipType">نوع العضوية المطلوبة *</label>
+                        <div class="label-with-link">
+                            <label for="membershipType">نوع العضوية المطلوبة *</label>
+                            <span class="learn-more-link" onclick="goToMembershipArticles()">📖 معرفة المزيد عن العضوية</span>
+                        </div>
                         <select id="membershipType" required>
                             <option value="">اختر نوع العضوية...</option>
                             <option value="عضو أساسي">عضو أساسي (التزام دائم وتصويت)</option>
@@ -496,62 +453,115 @@
             </form>
         </div>
 
-        <!-- BYLAWS TAB -->
+        <!-- BYLAWS TAB (FULL TEXT) -->
         <div id="bylaws-tab" class="tab-content">
-            <h2 class="section-title">اللائحة الداخلية ووثيقة التشغيل - إصدار (1)</h2>
+            <h2 class="section-title">اللائحة الداخلية ووثيقة التشغيل كاملة - إصدار (1)</h2>
             <div class="bylaws-content">
                 
-                <div class="article">
-                    <div class="article-title">مادة (1) التعريف</div>
-                    <p>الكيان استوديو أرتياتك للأعمال الفنية والتقنية (Artiatech Studio)، كيان ناشئ يهدف إلى تطوير وإنشاء المحتوى والحلول الرقمية سواءً فنية أو تقنية. تأسس الاستوديو على يد محمد السعيدي وعبد الرؤوف زايد بتاريخ 21/12/2025، وتم إطلاق المنصة الرقمية بتاريخ 24/12/2025. تُعدّ جميع الأقسام الفنية والتقنية وحدات تشغيلية متكاملة تحت مظلة تنظيمية وقانونية واحدة. تسري أحكام هذه اللائحة التنفيذية على كافة المنتسبين للأستوديو بمختلف فئاتهم.</p>
+                <div class="article" id="article-1">
+                    <div class="article-title">مادة (1) التعريف بالكيان والتأسيس</div>
+                    <p>الكيان استوديو أرتياتك للأعمال الفنية والتقنية (Artiatech Studio)، كيان ناشئ يهدف إلى تطوير وإنشاء المحتوى والحلول الرقمية سواءً كانت فنية أو تقنية.</p>
+                    <p>تأسس الاستوديو على يد محمد السعيدي وعبد الرؤوف زايد بتاريخ 21/12/2025، وتم إطلاق المنصة الرقمية الرسمية بتاريخ 24/12/2025.</p>
+                    <p>تُعدّ جميع الأقسام الفنية والتقنية وحدات تشغيلية متكاملة تحت مظلة تنظيمية وقانونية واحدة. وتسري أحكام هذه اللائحة التنفيذية والداخلية على كافة المنتسبين للأستوديو بمختلف فئاتهم ودرجات عضوياتهم دون استثناء.</p>
                 </div>
 
-                <div class="article">
-                    <div class="article-title">مادة (2) الهيكل التنظيمي</div>
-                    <p>الاستوديو فريق يتكون من قائد ونائب وأعضاء:</p>
+                <div class="article" id="article-2">
+                    <div class="article-title">مادة (2) الهيكل التنظيمى العام وأقسام العضوية</div>
+                    <p>يتكون الهيكل التنظيمي للأستوديو من المستويات والدرجات التالية:</p>
                     <ul>
-                        <li><strong>قائد الاستوديو:</strong> المسؤول الإداري والتشغيلي عن تحديد التوجه الاستراتيجي وإدارة المشاريع وتمثيل الإستوديو اجتماعيا وقانونياً.</li>
-                        <li><strong>نائب القائد:</strong> ينوب عن القائد في حال تفويضه أو غيابه، ويتولى الإشراف المباشر على التكليفات الميدانية.</li>
-                        <li><strong>العضو الأساسي:</strong> هو العضو الملتزم فعلياً بتنفيذ المهام التشغيلية، وله حقوق التصويت الداخلي والاستفادة من عوائد الاستوديو.</li>
-                        <li><strong>العضو المشارك / المساهم:</strong> هو العضو الملتزم بمشروع محدد أو مهمة مخصصة ذات إطار زمني معني، ولا يترتب عليه التزام دائم بنشاط الاستوديو.</li>
-                        <li><strong>تجميد العضوية:</strong> حالة تجميد تُمنح على حسب رغبة العضو لمراعاة الظروف الأكاديمية أو الشخصية لفترة محددة، مع تعليق كافة صلاحيات وواجبات العضوية والالتزامات المترتبة عليها خلالها.</li>
+                        <li><strong>قائد الاستوديو (Studio Leader):</strong> المسؤول الإداري والتشغيلي والأعلى عن تحديد التوجه الاستراتيجي وإدارة المشاريع العامة وتمثيل الاستوديو اجتماعياً وقانونياً أمام الجهات الخارجية.</li>
+                        <li><strong>نائب القائد (Vice Leader):</strong> ينوب عن القائد في حال تفويضه أو غيابه، ويتولى الإشراف المباشر على التكليفات الميدانية والمتابعة اليومية للأعضاء.</li>
+                        <li><strong>العضو الأساسي (Core Member):</strong> العضو الملتزم فعلياً بتنفيذ المهام التشغيلية بصفة مستمرة، ويحق له التصويت الداخلي والاستفادة المباشرة من عوائد الاستوديو وفق اللائحة الماليّة.</li>
+                        <li><strong>العضو المشارك / المساهم (Associate Member):</strong> العضو الملتزم بتنفيذ مشروع محدد أو مهمة مخصصة ذات إطار زمني محدد، ولا يترتب عليه التزام دائم بنشاط الاستوديو العام.</li>
+                        <li><strong>تجميد العضوية (Frozen Membership):</strong> حالة تنظيمية تُمنح بناءً على طلب العضو لمراعاة ظروفه الأكاديمية أو الشخصية لفترة محددة، مع تعليق كافة صلاحيات وواجبات العضوية خلالها.</li>
                     </ul>
                 </div>
 
-                <div class="article">
-                    <div class="article-title">مادة (3) الطبيعة التشغيلية والتنظيمية</div>
-                    <p>يتم تنفيذ القرارات اليومية والاتفاقيات والاعمال كل على حسب موقعه دون تداخل مع بقية الاعمال والمشاريع. في حالة عدم إمكانية الوصول للقائد من أجل أي سبب من الأسباب يتم التوجه تلقائياً ومباشرة الى النائب ثم إلى الاقدم فالأقدم.</p>
-                    <p>ليتم تنفيذ إحدى القرارات او التعديلات التي تؤثر على أحد جوانب الاستوديو يجب ان يصوت جميع الأعضاء الأساسيين والمشاركين. يعتبر القرار صالحاً بعد تصويت أغلبية الأعضاء المعنيين بالتصويت (الأغلبية = 66%). لا يتم تنفيذ القرار إن رفض 2 من الأساسيين أو أكثر. لا يوجد فرق في صوت القائد او نائبه عن بقية الأصوات عند التصويت.</p>
+                <div class="article" id="article-3">
+                    <div class="article-title">مادة (3) الطبيعة التشغيلية وآلية اتخاذ القرار</div>
+                    <p>1. يتم تنفيذ القرارات اليومية والاتفاقيات وال أعمال التشغيلية كل حسب موقعه ونطاق اختصاصه، دون تداخل مع بقية الأعمال والمشاريع.</p>
+                    <p>2. في حالة تعذر الوصول للقائد لأي سبب من الأسباب، يتم التوجه تلقائياً ومباشرة إلى نائب القائد، ثم إلى الأقدم فالأقدم من الأعضاء الأساسيين.</p>
+                    <p>3. تنفيذ القرارات المفصلية أو التعديلات التنظيمية التي تؤثر على جوهر عمل الاستوديو يستلزم طرح الموضوع لتصويت رسمي يشمل كافة الأعضاء الأساسيين والمشاركين المعنيين.</p>
+                    <p>4. يعتبر القرار نافذاً وصالحاً بعد حصوله على موافقة أغلبية الأعضاء المعنيين بالتصويت (نسبة الأغلبية = 66%).</p>
+                    <p>5. يعتبر القرار ملغاةً ولا يتم تنفيذه مطلقاً إذا قوبل برفض (2) من الأعضاء الأساسيين أو أكثر (حق الفيتو الأساسي).</p>
+                    <p>6. يتساوى صوت القائد أو نائبه مع صوت أي عضو أساسي آخر في عملية التصويت بدون أي ترجيح تلقائي.</p>
                 </div>
 
-                <div class="article">
-                    <div class="article-title">مادة (4) كتيب المشروع</div>
-                    <p>يُقصد بـ "كتيب المشروع" وثيقة تنفيذية وتنظيمية تُصدر بشكل مستقل لكل عمل تجاري او إداري أو فني أو تقني لتحقيق المرونة التشغيلية وحسم توزيع الحقوق والمسؤوليات مسبقاً. يتضمن: نطاق العمل، الجدول الزمني، الهيكل المالي وتوزيع العوائد، وفريق التنفيذ.</p>
+                <div class="article" id="article-4">
+                    <div class="article-title">مادة (4) كتيب المشروع (Project Handbook)</div>
+                    <p>1. يُقصد بـ "كتيب المشروع" وثيقة تنفيذية وتنظيمية مستقلة تُصدر لكل عمل تجاري أو إداري أو فني أو تقني يقدم عليه الاستوديو.</p>
+                    <p>2. يهدف الكتيب إلى تحقيق المرونة التشغيلية وحسم توزيع الحقوق والمسؤوليات المالية والفنية مسبقاً قبل بدء التنفيذ.</p>
+                    <p>3. يشتمل كتيب المشروع إجبارياً على البنود التالية: نطاق العمل المطلوب (Scope of Work)، الجدول الزمني والتسليمات، الهيكل المالي ونسب توزيع العوائد، وتحديد أعضاء فريق التنفيذ والدور الموكل لكل منهم.</p>
                 </div>
 
-                <div class="article">
-                    <div class="article-title">مادة (5) النظام المالي</div>
-                    <p>النظام المالي في الاستوديو مبني على مفهومين: <strong>الخزينة</strong> (صندوق المال العام والملكية والأصول) و<strong>صندوق التوزيعات</strong> (صرف المكافئات والنسب بحسب الأسهم). أي تغيير في أماكن حفظ الخزينة يشترط الإجماع من جميع الأعضاء الأساسيين.</p>
+                <div class="article" id="article-5">
+                    <div class="article-title">مادة (5) النظام المالي والهيكل التشغيلي للموارد</div>
+                    <p>يعتمد النظام المالي الداخلي للأستوديو على التمييز الصارم بين مفهومين أساسيين:</p>
+                    <ul>
+                        <li><strong>الخزينة (Studio Treasury):</strong> صندوق المال العام للأستوديو، وتضم جميع الأصول والملكيات التقنية والفنية والاحتياطي المالي غير المخصص للتوزيع. أي قرار بشأن تغيير أماكن حفظ الخزينة أو التصرف في أصولها يتطلب موافقة وإجماع كافة الأعضاء الأساسيين.</li>
+                        <li><strong>صندوق التوزيعات (Distribution Fund):</strong> الحساب المخصص لصرف المكافآت والنسب المالية والمستحقات للأعضاء بناءً على الأسهم والمهام المنجزة في كل مشروع على حدة.</li>
+                    </ul>
                 </div>
 
-                <div class="article">
-                    <div class="article-title">مادة (6) إلى مادة (8) فئات العضوية وحالاتها</div>
-                    <p>توضح المواد الشروط الدقيقة للعضو الأساسي والمشارك والمجمد، وحقوق وواجبات كل فئة، وآليات الترشيح والتجميد وإعادة التفعيل.</p>
+                <div class="article" id="article-6">
+                    <div class="article-title">مادة (6) العضو الأساسي - الأحكام والترسيم</div>
+                    <p>1. العضو الأساسي هو من شارك في تأسيس الاستوديو أو يساهم بفاعلية مستمرة في تشغيله اليومي.</p>
+                    <p>2. يلتزم العضو الأساسي بالحفاظ على حد أدنى من المساهمة الشهرية تقاس بساعات العمل المنجزة أو المهام الموكلة إليه.</p>
+                    <p>3. يتمتع العضو الأساسي بحق التصويت الكامل على القرارات الإدارية، والتعديلات التنظيمية، وإدارة موارد الخزينة.</p>
+                    <p>4. يتم ترسيم العضو المشارك ليصبح "عضواً أساسياً" بناءً على طلب تقدم به، أو عبر تزكية مباشرة من أحد الأعضاء الأساسيين، متبوعة بتصويت أغلبية الأعضاء الأساسيين بالموافقة.</p>
                 </div>
 
-                <div class="article">
-                    <div class="article-title">مادة (9) الاجتماعات</div>
-                    <p>تنقسم إلى دورية، طارئة، واجتماعات مشاريع. يجب توجيه الدعوة قبل 24 ساعة، وتدون محاضر رسمية لكافة الاجتماعات.</p>
+                <div class="article" id="article-7">
+                    <div class="article-title">مادة (7) العضو المشارك - الأحكام والتكاليف</div>
+                    <p>1. العضو المشارك هو العضو الذي يتم استقطابه أو التعاقد معه من خارج الاستوديو لإنجاز مهمة محددة، أو مشروع معين، أو من يخضع لفترة اختبار وتجريب مؤقتة.</p>
+                    <p>2. لا تفرض على العضو المشارك أي واجبات أو التزامات عامة تجاه الاستوديو غير الواردة في الاتفاق الخاص بالمشروع.</p>
+                    <p>3. يتقاضى العضو المشارك مستحقاته (سواءً كانت معنوية أو مادية) بشكل منفصل ومباشر بحسب كتيب المشروع، ولا علاقة له بصندوق التوزيعات العام أو الخزينة.</p>
+                    <p>4. يُستشار العضو المشارك ويحق له المشاركة في التصويت المقتصر على المشاريع التي يتواجد فيها طرفاً تنفيذياً فقط.</p>
                 </div>
 
-                <div class="article">
-                    <div class="article-title">مادة (10) ضوابط الملكية الفكرية</div>
-                    <p>كل كود برمجي، تصميم، أو محتوى فني يتم إنشاؤه باسم الاستوديو يُعتبر ملكاً حصرياً ونهائياً للأستوديو، ويحتفظ العضو المنفذ بحق نسبة الأرباح فقط حسب كتيب المشروع.</p>
+                <div class="article" id="article-8">
+                    <div class="article-title">مادة (8) العضو المجمد - الأحكام والشروط</div>
+                    <p>1. تجميد العضوية إكراهي أو اختياري هي حالة تنظيمية تُمنح بناءً على طلب كتابي يقدمه العضو لظروف خاصة (أكاديمية، صحية، شخصية) مع تحديد المدة الزمانية للتجميد.</p>
+                    <p>2. يترتب على تجميد العضوية تعليق كافة حقوق العضو في التصويت الداخلي، وتوقف إسناد المهام التشغيلية إليه.</p>
+                    <p>3. يُستثنى العضو المجمد تماماً من أي توزيعات مالية أو مكافآت يتم صرفها خلال فترة التجميد.</p>
                 </div>
 
-                <div class="article">
-                    <div class="article-title">مادة (11) - (14) السلوك، حل النزاعات، التعديل، وحل الاستوديو</div>
-                    <p>تحدد اللائحة العقوبات التدريجية (إنذار، تجميد، فصل)، وآليات الوساطة وحل النزاعات، والشروط الشديدة لإلغاء وتعديل اللائحة أو حل الكيان.</p>
+                <div class="article" id="article-9">
+                    <div class="article-title">مادة (9) نظام الاجتماعات وبوتوكول الإدارة</div>
+                    <p>1. تنقسم اجتماعات الاستوديو إلى: اجتماعات دورية تنظيمية، اجتماعات طارئة، واجتماعات خاصة بالمشاريع التنفيذية.</p>
+                    <p>2. يجب توجيه الدعوة للاجتماعات الرسمية قبل موعدها بـ 24 ساعة على الأقل مع إرفاق جدول الأعمال.</p>
+                    <p>3. تُعد محاضر رسمية لكل اجتماع تُسجل فيها القرارات والتصويتات وتُحفظ في أرشيف الاستوديو الرقمي.</p>
+                </div>
+
+                <div class="article" id="article-10">
+                    <div class="article-title">مادة (10) الملكية الفكرية والحقوق الرقمية</div>
+                    <p>1. كافة الأكواد البرمجية، والتصاميم الجرافيكية، والواجهات، والمحتوى الفني والمرئي الذي يتم إنشاؤه تحت اسم أو لصالح الاستوديو يُعد ملكاً حصرياً ونهائياً لأستوديو أرتياتك.</p>
+                    <p>2. يحتفظ العضو المنفذ بحقه الأدبي في الإشارة إلى اسمه، إضافة إلى حقه المالي في الأرباح المقررة وفق كتيب المشروع الخاص بذلك العمل.</p>
+                </div>
+
+                <div class="article" id="article-11">
+                    <div class="article-title">مادة (11) ضوابط السلوك والمخالفات التنظيمية</div>
+                    <p>تطبق عقوبات تدريجية على مخالفات عدم الالتزام بالمهام أو تسريب معلومات الأستوديو الرسمية، وتتدرج العقوبات كالتالي:</p>
+                    <ul>
+                        <li>التنبيه والإنذار الشفهي أو الكتابي.</li>
+                        <li>تجميد الصلاحيات والعضوية مؤقتاً.</li>
+                        <li>الفصل النهائي وإلغاء العضوية بتصويت أغلبية الأعضاء الأساسيين.</li>
+                    </ul>
+                </div>
+
+                <div class="article" id="article-12">
+                    <div class="article-title">مادة (12) آلية حل النزاعات والخلافات الداخلية</div>
+                    <p>في حال نشوب أي خلاف إداري أو مالي بين الأعضاء، يتم اللجوء إلى لجنة وساطة داخلية تتكون من قائد الاستوديو ونائبه وعضو أساسي محايد لحل النزاع ودياً بما يضمن استقرار الكيان.</p>
+                </div>
+
+                <div class="article" id="article-13">
+                    <div class="article-title">مادة (13) تعديل اللائحة التنفيذية</div>
+                    <p>لا يجوز تعديل أو إضافة أو إلغاء أي بند من مواد هذه اللائحة إلا بموافقة وإجماع ثلثي الأعضاء الأساسيين على الأقل في تصويت رسمي موثق.</p>
+                </div>
+
+                <div class="article" id="article-14">
+                    <div class="article-title">مادة (14) حل الكيان والتصفية</div>
+                    <p>لا يتم حل أستوديو أرتياتك أو تصفية أصوله إلا باتفاق وإجماع كافة المؤسسين والأعضاء الأساسيين، وتؤول كافة الأصول والخزينة للجهات أو الأوجه التي يتفق عليها الجميع في حينه.</p>
                 </div>
 
             </div>
@@ -623,7 +633,7 @@
         </div>
 
         <div class="pdf-field" style="margin-top: 10px;">
-            <span class="pdf-field-label">11. ملاحظات: </span><span id="p-notes" class="pdf-field-value"></span>
+            <span class="pdf-field-label">8. ملاحظات إضافية: </span><span id="p-notes" class="pdf-field-value"></span>
         </div>
 
         <div style="margin-top: 25px; border: 1px solid #cbd5e1; padding: 12px; border-radius: 4px; background-color: #f1f5f9; font-size: 9.5pt; text-align: center;">
@@ -654,7 +664,34 @@
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         
         document.getElementById(tabId).classList.add('active');
-        event.currentTarget.classList.add('active');
+        
+        if (tabId === 'form-tab') {
+            document.getElementById('tab-btn-form').classList.add('active');
+        } else if (tabId === 'bylaws-tab') {
+            document.getElementById('tab-btn-bylaws').classList.add('active');
+        }
+    }
+
+    function goToMembershipArticles() {
+        // Switch to Bylaws tab
+        switchTab('bylaws-tab');
+
+        // Scroll directly to Article 2
+        const targetArticle = document.getElementById('article-2');
+        if (targetArticle) {
+            targetArticle.scrollIntoView({ behavior: 'smooth' });
+            
+            // Highlight membership related articles (Article 2, 6, 7, 8)
+            ['article-2', 'article-6', 'article-7', 'article-8'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.add('highlight');
+                    setTimeout(() => {
+                        el.classList.remove('highlight');
+                    }, 4000);
+                }
+            });
+        }
     }
 
     function generatePDF(e) {
