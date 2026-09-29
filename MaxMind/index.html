@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق تدريب الماكس مايند المتقدم</title>
+    <style>
+        /* ثيمات الألوان (مظلم / مضيء) */
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --input-bg: #0f172a;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --input-bg: #f8fafc;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --accent: #22c55e;
+            --danger: #ef4444;
+            --display-color: var(--primary);
+            --display-size: 4rem;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+            text-align: center;
+            position: relative;
+            transition: background-color 0.3s;
+        }
+
+        /* زر الإعدادات العلوي */
+        .settings-btn {
+            position: absolute;
+            top: 1.2rem;
+            left: 1.2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            padding: 0;
+            width: auto;
+            margin: 0;
+            transition: color 0.2s;
+        }
+        .settings-btn:hover {
+            color: var(--text-color);
+        }
+
+        h1, h2 {
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            text-align: right;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
+            transition: background-color 0.2s;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .secondary-btn {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            margin-top: 0.5rem;
+        }
+        .secondary-btn:hover {
+            background-color: var(--border-color);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* شاشة العرض والتدريب */
+        #display-box {
+            font-size: var(--display-size);
+            font-weight: bold;
+            margin: 2rem 0;
+            min-height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--display-color);
+            transition: font-size 0.2s, color 0.2s;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* نافذة الإعدادات الجانبية/المنبثقة */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 400px;
+            text-align: right;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- زر الإعدادات المتقدمة -->
+        <button class="settings-btn" onclick="toggleSettingsModal(true)" title="الإعدادات المتقدمة">⚙️</button>
+
+        <!-- 1. شاشة اختيار وضع التدريب والإعدادات الأساسية -->
+        <div id="setup-screen">
+            <h1>الماكس مايند</h1>
+            
+            <div class="form-group">
+                <label for="mode">وضع التشغيل:</label>
+                <select id="mode">
+                    <option value="practice">وضع التدريب (عرض وإظهار النتيجة)</option>
+                    <option value="exam">وضع الاختبار (إدخال النتائج وحساب الدرجة)</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="exam-questions-group" style="display: none;">
+                <label for="exam-count">عدد المسائل في الاختبار:</label>
+                <input type="number" id="exam-count" value="5" min="1" max="50">
+            </div>
+
+            <div class="form-group">
+                <label for="num-count">عدد الأرقام في المسألة الواحدة:</label>
+                <input type="number" id="num-count" value="5" min="2" max="20">
+            </div>
+
+            <div class="form-group">
+                <label for="digits">عدد الخانات (عدد الأرقام):</label>
+                <select id="digits">
+                    <option value="1">رقم واحد (1-9)</option>
+                    <option value="2" selected>رقمين (10-99)</option>
+                    <option value="3">ثلاثة أرقام (100-999)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="speed">السرعة بين الأرقام (بالثواني):</label>
+                <input type="number" id="speed" value="1.5" step="0.1" min="0.2" max="5">
+            </div>
+
+            <div class="form-group">
+                <label for="operations">نوع العمليات:</label>
+                <select id="operations">
+                    <option value="add">جمع فقط (+)</option>
+                    <option value="mixed">جمع وطرح (+ و -)</option>
+                </select>
+            </div>
+
+            <button onclick="startApp()">ابدأ التدريب</button>
+        </div>
+
+        <!-- 2. شاشة عرض الأرقام -->
+        <div id="play-screen" class="hidden">
+            <div class="stats">
+                <span id="progress-info">المسألة 1</span>
+                <span id="step-info">الرقم 1/5</span>
+            </div>
+            <div id="display-box">جاهز؟</div>
+            <div id="action-area"></div>
+            <button class="secondary-btn" onclick="abortToSetup()">إنهاء العرض والعودة</button>
+        </div>
+
+        <!-- 3. شاشة إدخال الإجابة (وضع الاختبار) -->
+        <div id="answer-screen" class="hidden">
+            <h2>أدخل ناتـج المسألة:</h2>
+            <div class="form-group">
+                <input type="number" id="user-answer" placeholder="اكتب النتيجة هنا...">
+            </div>
+            <button onclick="submitAnswer()">تحقق / التالي</button>
+        </div>
+
+        <!-- 4. شاشة النتيجة النهائية -->
+        <div id="result-screen" class="hidden">
+            <h2>نتيجة الاختبار</h2>
+            <p id="final-score" style="font-size: 1.5rem; margin: 1.5rem 0;"></p>
+            <button onclick="resetToSetup()">العودة للرئيسية</button>
+        </div>
+    </div>
+
+    <!-- نافذة الإعدادات المتقدمة (Modal) -->
+    <div id="settings-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>الإعدادات المتقدمة والمظهر</h2>
+            
+            <div class="form-group">
+                <label for="theme-select">الوضع (المظهر):</label>
+                <select id="theme-select" onchange="changeTheme(this.value)">
+                    <option value="dark">وضع مظلم (Dark Mode)</option>
+                    <option value="light">وضع مضيء (Light Mode)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="font-size-select">حجم الخط أثناء العرض:</label>
+                <select id="font-size-select" onchange="changeFontSize(this.value)">
+                    <option value="3rem">صغير</option>
+                    <option value="4rem" selected>متوسط</option>
+                    <option value="5.5rem">كبير جداً</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="font-color-select">لون الخط أثناء العرض:</label>
+                <select id="font-color-select" onchange="changeFontColor(this.value)">
+                    <option value="#6366f1">نيلي افتراضي</option>
+                    <option value="#22c55e">أخضر بارز</option>
+                    <option value="#38bdf8">أزرق سماوي</option>
+                    <option value="#f59e0b">أصفر / برتقالي</option>
+                    <option value="#ef4444">أحمر</option>
+                    <option value="var(--text-color)">لون النص العادي</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="sound-select">الصوت عند ظهور الرقم:</label>
+                <select id="sound-select" onchange="changeSound(this.value)">
+                    <option value="on">مفعل (نبضة صوتية)</option>
+                    <option value="off">صامت</option>
+                </select>
+            </div>
+
+            <button onclick="toggleSettingsModal(false)">إغلاق وحفظ</button>
+        </div>
+    </div>
+
+    <script>
+        let config = {
+            mode: 'practice',
+            examCount: 5,
+            numCount: 5,
+            digits: 2,
+            speed: 1500,
+            operations: 'add',
+            sound: 'on'
+        };
+
+        let currentExamIndex = 0;
+        let score = 0;
+        let currentNumbers = [];
+        let currentCorrectAnswer = 0;
+        let currentStep = 0;
+        let timer = null;
+
+        function changeTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('max_mind_theme', theme);
+        }
+
+        function changeFontSize(size) {
+            document.documentElement.style.setProperty('--display-size', size);
+            localStorage.setItem('max_mind_fontsize', size);
+        }
+
+        function changeFontColor(color) {
+            document.documentElement.style.setProperty('--display-color', color);
+            localStorage.setItem('max_mind_fontcolor', color);
+        }
+
+        function changeSound(val) {
+            config.sound = val;
+            localStorage.setItem('max_mind_sound', val);
+        }
+
+        function toggleSettingsModal(show) {
+            const modal = document.getElementById('settings-modal');
+            if (show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function playBeep() {
+            if (config.sound !== 'on') return;
+            try {
+                let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = 600;
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.15);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.15);
+            } catch (e) {}
+        }
+
+        document.getElementById('mode').addEventListener('change', function() {
+            const examGroup = document.getElementById('exam-questions-group');
+            if (this.value === 'practice') {
+                examGroup.style.display = 'none';
+            } else {
+                examGroup.style.display = 'block';
+            }
+        });
+
+        function startApp() {
+            config.mode = document.getElementById('mode').value;
+            config.examCount = parseInt(document.getElementById('exam-count').value) || 5;
+            config.numCount = parseInt(document.getElementById('num-count').value) || 5;
+            config.digits = parseInt(document.getElementById('digits').value);
+            config.speed = parseFloat(document.getElementById('speed').value) * 1000;
+            config.operations = document.getElementById('operations').value;
+
+            currentExamIndex = 0;
+            score = 0;
+
+            document.getElementById('setup-screen').classList.add('hidden');
+            document.getElementById('play-screen').classList.remove('hidden');
+
+            runNextProblem();
+        }
+
+        function abortToSetup() {
+            clearTimeout(timer);
+            resetToSetup();
+        }
+
+        function generateNumbers() {
+            let min = Math.pow(10, config.digits - 1);
+            let max = Math.pow(10, config.digits) - 1;
+            if (config.digits === 1) min = 1;
+
+            let numbers = [];
+            let runningSum = 0;
+
+            for (let i = 0; i < config.numCount; i++) {
+                let n = Math.floor(Math.random() * (max - min + 1)) + min;
+                
+                if (i > 0 && config.operations === 'mixed') {
+                    let op = Math.random() < 0.5 ? 1 : -1;
+                    if (op === -1 && runningSum - n < 0) {
+                        op = 1;
+                    }
+                    numbers.push({ val: n, op: op });
+                    runningSum += (n * op);
+                } else {
+                    numbers.push({ val: n, op: 1 });
+                    runningSum += n;
+                }
+            }
+            return numbers;
+        }
+
+        function runNextProblem() {
+            if (config.mode === 'exam' && currentExamIndex >= config.examCount) {
+                showFinalResults();
+                return;
+            }
+
+            currentExamIndex++;
+            currentNumbers = generateNumbers();
+            currentCorrectAnswer = currentNumbers.reduce((acc, item) => acc + (item.val * item.op), 0);
+
+            currentStep = 0;
+            document.getElementById('progress-info').innerText = config.mode === 'exam' ? `المسألة ${currentExamIndex} من ${config.examCount}` : `وضع التدريب`;
+            
+            let displayBox = document.getElementById('display-box');
+            let actionArea = document.getElementById('action-area');
+            actionArea.innerHTML = '';
+            displayBox.innerText = "استعد...";
+
+            setTimeout(() => {
+                showNextNumber();
+            }, 1000);
+        }
+
+        function showNextNumber() {
+            if (currentStep < currentNumbers.length) {
+                let item = currentNumbers[currentStep];
+                let displayBox = document.getElementById('display-box');
+                
+                let text = "";
+                if (config.operations === 'mixed' && currentStep > 0) {
+                    text = (item.op === 1 ? "+ " : "- ") + item.val;
+                } else {
+                    text = item.val.toString();
+                }
+
+                displayBox.innerText = text;
+                document.getElementById('step-info').innerText = `الرقم ${currentStep + 1}/${config.numCount}`;
+                
+                playBeep();
+                currentStep++;
+                timer = setTimeout(showNextNumber, config.speed);
+            } else {
+                document.getElementById('display-box').innerText = "انتهى!";
+                document.getElementById('step-info').innerText = "";
+
+                let actionArea = document.getElementById('action-area');
+                
+                if (config.mode === 'practice') {
+                    actionArea.innerHTML = `<button onclick="showPracticeAnswer()">عرض النتيجة</button>`;
+                } else {
+                    setTimeout(() => {
+                        document.getElementById('play-screen').classList.add('hidden');
+                        document.getElementById('answer-screen').classList.remove('hidden');
+                        document.getElementById('user-answer').value = '';
+                        document.getElementById('user-answer').focus();
+                    }, 600);
+                }
+            }
+        }
+
+        function showPracticeAnswer() {
+            document.getElementById('display-box').innerText = `الناتج: ${currentCorrectAnswer}`;
+            document.getElementById('action-area').innerHTML = `<button onclick="runNextProblem()">مسألة جديدة</button>`;
+        }
+
+        function submitAnswer() {
+            let userVal = parseInt(document.getElementById('user-answer').value);
+            if (isNaN(userVal)) {
+                alert('الرجاء إدخال رقم صحيح');
+                return;
+            }
+
+            if (userVal === currentCorrectAnswer) {
+                score++;
+            }
+
+            document.getElementById('answer-screen').classList.add('hidden');
+            document.getElementById('play-screen').classList.remove('hidden');
+
+            runNextProblem();
+        }
+
+        function showFinalResults() {
+            document.getElementById('play-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            document.getElementById('final-score').innerText = `لقد أجبت بشكل صحيح على ${score} من أصل ${config.examCount} مسائل.`;
+        }
+
+        function resetToSetup() {
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('answer-screen').classList.add('hidden');
+            document.getElementById('play-screen').classList.add('hidden');
+            document.getElementById('setup-screen').classList.remove('hidden');
+        }
+
+        window.onload = function() {
+            let savedTheme = localStorage.getItem('max_mind_theme') || 'dark';
+            let savedFont = localStorage.getItem('max_mind_fontsize') || '4rem';
+            let savedColor = localStorage.getItem('max_mind_fontcolor') || '#6366f1';
+            let savedSound = localStorage.getItem('max_mind_sound') || 'on';
+
+            changeTheme(savedTheme);
+            changeFontSize(savedFont);
+            changeFontColor(savedColor);
+            changeSound(savedSound);
+
+            document.getElementById('theme-select').value = savedTheme;
+            document.getElementById('font-size-select').value = savedFont;
+            document.getElementById('font-color-select').value = savedColor;
+            document.getElementById('sound-select').value = savedSound;
+        };
+    </script>
+</body>
+                  </html>
+                  
